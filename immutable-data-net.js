@@ -17,21 +17,27 @@ const remArr = (old, updates, matchField) => {
 }
 
 
-const add = (old, type, nsOrEs) => {
+const mapNE = (ne) => {
+  const {graph, removed, ...mapped} = ne
+  // if (mapped.edges) mapped.edges = mapped.edges.map(e => mapNE(e))
+  return mapped
+}
+
+const add = (old, nsOrEs) => {
   if (nsOrEs.length === 0) return old
-  const upds = nsOrEs.map(x => ({...x}))
+  const upds = nsOrEs.map(x => mapNE(x))
   return old.concat(upds)
 }
 
 const rem = (old, nsOrEs) => {
   if (nsOrEs.length === 0) return old
-  const upds = nsOrEs.map(x => ({...x}))
+  const upds = nsOrEs.map(x => mapNE(x))
   return remArr(old, upds, 'id')
 }
 
 const upd = (old, nsOrEs) => {
   if (nsOrEs.length === 0) return old
-  const upds = nsOrEs.map(x => ({...x}))
+  const upds = nsOrEs.map(x => mapNE(x))
   return updArr(old, upds, 'id')
 }
 
@@ -48,14 +54,16 @@ class ImmutableGraph extends Graph {
     const node = {...super.node(...args)}
     const old = this.immutable
     const new_ = {
-      nodes: add(old.nodes, node),
+      nodes: add(old.nodes, [node]),
       edges: old.edges,
     }
     this.immutable = new_
   }
 
-  addEdge(...args) {
-    const edge = {...super.edge(...args)}
+  addEdge(fromId, toId, ...args) {
+    const from = this.nodes.find(n => n.id === fromId)
+    const to = this.nodes.find(n => n.id === toId)
+    const edge = {...super.edge(from, to, ...args)}
     const old = this.immutable
     const new_ = {
       nodes: upd(old.nodes, [edge.from, edge.to]),
