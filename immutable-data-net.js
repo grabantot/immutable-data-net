@@ -39,8 +39,8 @@ class ImmutableGraph extends Graph {
   constructor(...args) {
     super(...args)
     this.immutable = {
-      nodes: this.nodes.map(n => ({...n})),
-      edges: this.edges.map(e => ({...e})),
+      nodes: add([], this.nodes),
+      edges: add([], this.edges),
     }
   }
 
@@ -64,8 +64,8 @@ class ImmutableGraph extends Graph {
     this.immutable = new_
   }
 
-  removeNode(updNode) {
-    const node = this.nodes.find(n => n.id === updNode.id)
+  removeNode(id) {
+    const node = this.nodes.find(n => n.id === id)
     assert(node, 'Node not found')
     node.remove()
     const old = this.immutable
@@ -76,8 +76,8 @@ class ImmutableGraph extends Graph {
     this.immutable = new_
   }
 
-  removeEdge(updEdge) {
-    const edge = this.edges.find(e => e.id === updEdge.id)
+  removeEdge(id) {
+    const edge = this.edges.find(e => e.id === id)
     assert(edge, 'Edge not found')
     edge.remove()
     const old = this.immutable
@@ -88,8 +88,30 @@ class ImmutableGraph extends Graph {
     this.immutable = new_
   }
 
-  updateNode(updEdge) {
+  updateNode(id, data) {
+    const node = this.nodes.find(n => n.id === id)
+    assert(node, 'Node not found')
+    if (node.data === data) return
+    node.data = data
+    const old = this.immutable
+    const new_ = {
+      nodes: upd(old.nodes, [node]),
+      edges: old.edges,
+    }
+    this.immutable = new_
+  }
 
+  updateEdge(id, data) {
+    const edge = this.edges.find(e => e.id === id)
+    assert(edge, 'Edge not found')
+    if (edge.data === data) return
+    edge.data = data
+    const old = this.immutable
+    const new_ = {
+      nodes: old.nodes,
+      edges: upd(old.edges, [edge]),
+    }
+    this.immutable = new_
   }
 }
 
