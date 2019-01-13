@@ -1,0 +1,23 @@
+{
+  "name": "immutable-data-net",
+  "version": "1.0.0",
+  "description": "",
+  "main": "immutable-data-net.js",
+  "dependencies": {
+    "data-net": "^5.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grabantot/immutable-data-net.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grabantot/immutable-data-net/issues"
+  },
+  "homepage": "https://github.com/grabantot/immutable-data-net#readme"
+}
